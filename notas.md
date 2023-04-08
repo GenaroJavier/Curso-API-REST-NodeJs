@@ -52,9 +52,21 @@ Ej. Si tenemos un metodo sumar, ese metodo unicamente se debe centrar en sumar.
 
 Siguiendo esta filosofia, actualmente en nuestro codigo nosotros tenemos un index con todos los endpoints que hemos creado. Pero si seguimos la SRP podemos organizar por todos los endpoints de productos en un archivo, todos los endpoints de categorias en otro, etc. 
 
-Esto lo podemos hacer de la siguiente manera: 
 
 
+
+
+Al reorgnizar todos los endpoints en este caso de productos, es necesario que nosotros exportemos express y creemos una instancia para que generemos el router especifico de productos, por ejemplo a continuación muestro como era un endpoint anteriormente. 
+
+![](C:\Users\Programador%20JR\AppData\Roaming\marktext\images\2023-04-08-10-33-52-image.png)
+
+
+
+![](C:\Users\Programador%20JR\AppData\Roaming\marktext\images\2023-04-08-10-39-03-image.png)
+
+Como podemos ver, el router se encargar de especificar la ruta de productos y ya no es necesario que nosotros la pongamos al inicio de la ruta del endpoint. 
+
+De esa manera sabemos que en productosRouter.js vamos a encontrar todas las rutas que tengan que ver con productos. 
 
 ## Notas
 
