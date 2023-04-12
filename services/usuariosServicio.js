@@ -25,16 +25,40 @@ class UsuariosServicio {
     return this.usuarios.find((usuario) => usuario.id_usuario === id_usuario);
   }
 
-  crear(){
-
+  crear(data){
+    const nuevo_usuario = {
+      id_usuario: faker.datatype.uuid(),
+      ...data,
+    }
+    this.usuarios.push(nuevo_usuario);
+    return nuevo_usuario;
   }
 
-  actualizar(){
+  actualizar(id_usuario, cambios){
+    const index = this.usuarios.findIndex(item => item.id_usuario === id_usuario);
 
+    if(index === -1){
+      throw new Error("Usuario no encontrado");
+    }
+
+    const usuario_a_actualizar = this.usuarios[index];
+
+    this.usuarios[index] = {
+      ...usuario_a_actualizar,
+      ...cambios
+    }
+
+    return this.usuarios[index];
   }
 
-  eliminar(){
+  eliminar(id_usuario){
+    const index = this.usuarios.findIndex(item => item.id_usuario === id_usuario);
+    if(index === -1){
+      throw new Error("Usuario no encontrado");
+    }
 
+    this.usuarios.splice(index, 1);
+    return { id_usuario };
   }
 }
 

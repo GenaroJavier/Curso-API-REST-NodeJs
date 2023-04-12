@@ -1,8 +1,5 @@
 const { faker } = require('../node_modules/@faker-js/faker');
-/**
- * Aqui se debe difinir toda la logina de negocio que deben de tener nuestros datos.
- * Por ejemplo ene este caso, crear o editar productos
-*/
+
 class ProductoServicio {
 
   constructor() {
@@ -23,8 +20,13 @@ class ProductoServicio {
       }
   }
 
-  crear(){
-
+  crear(data){
+    const nuevo_producto = {
+      id_producto: faker.datatype.uuid(),
+      ...data,
+    }
+    this.productos.push(nuevo_producto);
+    return nuevo_producto;
   }
 
   buscar(){
@@ -35,14 +37,31 @@ class ProductoServicio {
     return this.productos.find((item) => item.id_producto === id_producto);
   }
 
-  actualizar(){
+  actualizar(id_producto, cambios){
+    const index = this.productos.findIndex(item => item.id_producto === id_producto);
 
+    if(index === -1){
+      throw new Error("Producto no encontrado");
+    }
+
+    const producto_a_actualizar = this.productos[index];
+    this.productos[index] = {
+      ...producto_a_actualizar,
+      ...cambios
+    }
+
+    return this.productos[index];
   }
 
-  eliminar(){
+  eliminar(id_producto){
+    const index = this.productos.findIndex(item => item.id_producto === id_producto);
+    if(index === -1){
+      throw new Error("Producto no encontrado");
+    }
 
+    this.productos.splice(index, 1);
+    return { id_producto };
   }
-
 }
 
 module.exports = ProductoServicio;
