@@ -20,7 +20,7 @@ class ProductoServicio {
       }
   }
 
-  crear(data){
+  async crear(data){
     const nuevo_producto = {
       id_producto: faker.datatype.uuid(),
       ...data,
@@ -29,15 +29,19 @@ class ProductoServicio {
     return nuevo_producto;
   }
 
-  buscar(){
-    return this.productos;
+  async buscar(){
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.productos);
+      }, 5000);
+    })
   }
 
-  buscarUno(id_producto){
+  async buscarUno(id_producto){
     return this.productos.find((item) => item.id_producto === id_producto);
   }
 
-  actualizar(id_producto, cambios){
+  async actualizar(id_producto, cambios){
     const index = this.productos.findIndex(item => item.id_producto === id_producto);
 
     if(index === -1){
@@ -53,7 +57,7 @@ class ProductoServicio {
     return this.productos[index];
   }
 
-  eliminar(id_producto){
+  async eliminar(id_producto){
     const index = this.productos.findIndex(item => item.id_producto === id_producto);
     if(index === -1){
       throw new Error("Producto no encontrado");
