@@ -44,9 +44,18 @@ router.delete('/:id_producto', async (req, res) => {
 });
 
 
-router.get('/buscar/:id_producto', async (req, res) => {
-  const id_producto = await req.params.id_producto;
-  res.json(productos.buscarUno(id_producto));
+router.get('/:id_producto', async (req, res, next) => {
+  try {
+    const id_producto = req.params.id_producto;
+    res.json(await productos.buscarUno(id_producto));
+  } catch (error) {
+    next(error);
+    /**
+     * El manejo del middleware para los errores lo hace de manera automatica
+     * pues al estar dentro del try sabe que ha ocurrido algo y va en busca
+     * de los middlewares de tipo error que tenemos diponibles
+     */
+  }
 });
 
 module.exports = router;

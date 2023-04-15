@@ -38,8 +38,15 @@ class ProductoServicio {
   }
 
   async buscarUno(id_producto){
+    //Creamos el siguiente error, que deberia que ser capturado por los middlewares
+    const total = this.getTotal();
     return this.productos.find((item) => item.id_producto === id_producto);
   }
+
+  /**
+   * Aqui nosotros como tal "sembramos el error"
+   * pero debemos capturarlo y eso lo hace el routing
+   */
 
   async actualizar(id_producto, cambios){
     const index = this.productos.findIndex(item => item.id_producto === id_producto);
