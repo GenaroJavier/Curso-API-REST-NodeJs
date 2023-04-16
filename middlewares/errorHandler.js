@@ -5,13 +5,10 @@
  */
 
 function capturarErrores(err, req, res, next) {
-  console.log("Capturar errores");
-  console.error(err);
   next(err); //Si nosotros le devolvemos el error, podriamos decir que el middlelware es de tipo error
 }
 
 function mostrarErrores(err, req, res, next) {
-  console.log("Mostrar errores");
   res.status(500).json({
     message: err.message,
     stack: err.stack,

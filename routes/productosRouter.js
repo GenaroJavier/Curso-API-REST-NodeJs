@@ -6,20 +6,26 @@ const router = express.Router();
 const ProductoServicio = require("../services/productoServicio.js");
 const productos = new ProductoServicio();
 
+//Validaciones
+const { validarHandler } = require('../middlewares/validarHandler.js');
+const { obtenerIdProductoSchema, actualizarProductoSchema, crearProductoSchema } = require('../schemas/productoSchema.js');
 
 router.get('/', async (req, res) => {
   const productos_disponibles = await productos.buscar();
   res.json(productos_disponibles);
 });
 
-
-
-router.post('/', async (req, res) => {
+router.post('/',
+validarHandler(crearProductoSchema, 'body'),
+async (req, res) => {
   res.status(201).json(await productos.crear(req.body));
 });
 
 
-router.patch('/:id_producto', async (req, res, next) => {
+router.patch('/:id_producto',
+validarHandler(obtenerIdProductoSchema, 'params'),
+validarHandler(actualizarProductoSchema, 'body'),
+async (req, res, next) => {
   try {
     const { id_producto } = req.params;
     const body = req.body;
@@ -42,17 +48,14 @@ router.delete('/:id_producto', async (req, res) => {
 });
 
 
-router.get('/:id_producto', async (req, res, next) => {
+router.get('/:id_producto',
+validarHandler(obtenerIdProductoSchema, 'params'),
+async (req, res, next) => {
   try {
-    const id_producto = req.params.id_producto;
+    const { id_producto } = req.params;
     res.json(await productos.buscarUno(id_producto));
   } catch (error) {
     next(error);
-    /**
-     * El manejo del middleware para los errores lo hace de manera automatica
-     * pues al estar dentro del try sabe que ha ocurrido algo y va en busca
-     * de los middlewares de tipo error que tenemos diponibles
-     */
   }
 });
 
