@@ -19,16 +19,14 @@ router.post('/', async (req, res) => {
 });
 
 
-router.patch('/:id_producto', async (req, res) => {
+router.patch('/:id_producto', async (req, res, next) => {
   try {
     const { id_producto } = req.params;
     const body = req.body;
     const info = await productos.actualizar(id_producto, body);
     res.json(info);
   } catch (error) {
-    res.status(404).json({
-      message: error.message
-    });
+    next(error);
   }
 });
 

@@ -1,4 +1,5 @@
 const { faker } = require('../node_modules/@faker-js/faker');
+const Boom = require('@hapi/boom');
 
 class ProductoServicio {
 
@@ -16,6 +17,7 @@ class ProductoServicio {
           nombre: faker.commerce.productName(),
           precio: parseInt(faker.commerce.price(), 10),
           imagen: faker.commerce.productDescription(),
+          estatus: faker.datatype.boolean(),
         });
       }
   }
@@ -33,14 +35,21 @@ class ProductoServicio {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(this.productos);
-      }, 5000);
+      }, 1000);
     })
   }
 
   async buscarUno(id_producto){
-    //Creamos el siguiente error, que deberia que ser capturado por los middlewares
-    const total = this.getTotal();
-    return this.productos.find((item) => item.id_producto === id_producto);
+    const producto = this.productos.find((item) => item.id_producto === id_producto);
+    if(!producto){
+      throw Boom.notFound('No se ha encontrado el producto');
+    }
+
+    if(!producto.estatus) {
+      throw Boom.conflict('El producto no esta disponible');
+    }
+
+    return producto;
   }
 
   /**
@@ -52,7 +61,7 @@ class ProductoServicio {
     const index = this.productos.findIndex(item => item.id_producto === id_producto);
 
     if(index === -1){
-      throw new Error("Producto no encontrado");
+      throw Boom.notFound('No se ha encontrado el producto');
     }
 
     const producto_a_actualizar = this.productos[index];
@@ -67,7 +76,7 @@ class ProductoServicio {
   async eliminar(id_producto){
     const index = this.productos.findIndex(item => item.id_producto === id_producto);
     if(index === -1){
-      throw new Error("Producto no encontrado");
+      throw Boom.notFound('No se ha encontrado el producto');
     }
 
     this.productos.splice(index, 1);
